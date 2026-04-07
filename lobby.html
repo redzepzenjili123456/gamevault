@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault - Соб за игри</title>
+    <link rel="stylesheet" href="lobby.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="games-container">
+        <div class="header">
+            <div class="user-profile">
+                <div class="user-avatar">🎮</div>
+                <div class="user-info">
+                    <h2 id="welcome"></h2>
+                    <div class="user-email">📧 <span id="userEmail"></span></div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">🚪 Одјави се</button>
+        </div>
+        
+        <div class="section-title">
+            <h1>🎮 ИЗБЕРИ ЈА ТВОЈАТА ИГРА</h1>
+            <p>Кликни на која било игра за да започнеш</p>
+        </div>
+        
+        <div class="games-grid" id="gamesGrid"></div>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="gamesCount">0</div>
+                <div class="stat-label">Достапни игри</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="playersOnline">1</div>
+                <div class="stat-label">Играчи онлајн</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gamesList = [
+            { id: 'snake', name: 'Snake', icon: '🐍' },
+            { id: 'pong', name: 'Pong', icon: '🏓' },
+            { id: 'tetris', name: 'Tetris', icon: '🧩' },
+            { id: 'xo', name: 'XO', icon: '❌⭕' },
+            { id: 'memory', name: 'Memory', icon: '🧠' },
+            { id: 'flappy', name: 'Flappy Bird', icon: '🐦' },
+            { id: 'dice', name: 'Lucky Dice', icon: '🎲' },
+            { id: 'clicker', name: 'Cosmic Clicker', icon: '🖱️' }
+        ];
+
+        function checkLogin() {
+            const username = localStorage.getItem("username");
+            const email = localStorage.getItem("userEmail");
+            
+            if (!username || !email) {
+                window.location.href = "index.html";
+                return false;
+            }
+            
+            document.getElementById("welcome").innerHTML = "Добредојде, " + username + "! 🎮";
+            document.getElementById("userEmail").innerText = email;
+            document.getElementById("gamesCount").innerText = gamesList.length;
+            return true;
+        }
+
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("gameUser");
+            window.location.href = "index.html";
+        }
+
+        function startGame(game) {
+            const gameFiles = {
+                'snake': 'games/snake.html',
+                'pong': 'games/pong.html',
+                'tetris': 'games/tetris.html',
+                'xo': 'games/xo.html',
+                'memory': 'games/memory.html',
+                'flappy': 'games/flappy.html',
+                'dice': 'games/dice.html',
+                'clicker': 'games/clicker.html'
+            };
+            
+            if (gameFiles[game]) {
+                window.location.href = gameFiles[game];
+            } else {
+                alert("Играта е во подготовка!");
+            }
+        }
+
+        const gamesGrid = document.getElementById('gamesGrid');
+        gamesList.forEach(game => {
+            const gameCard = document.createElement('div');
+            gameCard.className = 'game-card';
+            gameCard.innerHTML = `
+                <div class="game-icon">${game.icon}</div>
+                <div class="game-name">${game.name}</div>
+                <button class="play-btn" onclick="startGame('${game.id}')">Играј →</button>
+            `;
+            gamesGrid.appendChild(gameCard);
+        });
+
+        checkLogin();
+    </script>
+</body>
+</html>
